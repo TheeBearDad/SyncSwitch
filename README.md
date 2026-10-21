@@ -6,6 +6,8 @@ Turn NVIDIA G-SYNC on and off with a single hotkey, without opening NVIDIA Contr
 
  Side Note: First time you use this program you may have to toggle G-Sync on in Nvidia Control Panel first. I haven't fully tested that so please let me know if this is an issue.
 
+ When toggling G-Sync on and off your monitor will black screen for a few seconds. That is totally normal and cannot be avoided.
+
 ## Features
 
 - **One-key toggle** with a global hotkey that works in any app or game
