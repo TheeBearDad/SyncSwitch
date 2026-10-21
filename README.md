@@ -4,6 +4,8 @@ Turn NVIDIA G-SYNC on and off with a single hotkey, without opening NVIDIA Contr
 
  SyncSwitch sits in your system tray. Press **Ctrl+Alt+G** (or any hotkey you choose) and G-SYNC flips on or off, with a small pop-up confirming the new state.
 
+ Side Note: First time you use this program you may have to toggle G-Sync on in Nvidia Control Panel first. I haven't fully tested that so please let me know if this is an issue.
+
 ## Features
 
 - **One-key toggle** with a global hotkey that works in any app or game
