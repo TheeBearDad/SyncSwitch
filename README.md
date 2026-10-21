@@ -1,72 +1,133 @@
-# SyncSwitch
-A tiny Windows tray app that turns NVIDIA G-SYNC on and off with a hotkey or via Windows Tray.
+#  SyncSwitch
 
--  Default hotkey:  `Ctrl+Alt+G` (change it any time from the tray menu)
--  Tray icon:  green  G  = on, grey  G  with a slash = off. Left-click the icon to toggle too.
--  Remembers your "on" mode:  fullscreen only, or fullscreen and windowed.
+Turn NVIDIA G-SYNC on and off with a single hotkey, without opening NVIDIA Control Panel.
 
-It flips the same driver setting as the "Enable G-SYNC" checkbox in NVIDIA Control Panel, using NVIDIA's own driver API (NVAPI). Nothing is injected into games.
+ SyncSwitch sits in your system tray. Press **Ctrl+Alt+G** (or any hotkey you choose) and G-SYNC flips on or off, with a small pop-up confirming the new state.
 
-## Set it up
+## Features
 
-1. Install  Python 3.9 or newer  from python.org. On the first installer screen, tick  "Add python.exe to PATH" .
-2. Put this folder anywhere (e.g. `C:\Tools\gsync-toggle`).
-3. Double-click  `build.bat` . After a minute you'll have `dist\GSyncToggle.exe`.
-4. Run `GSyncToggle.exe`. The icon appears in the tray (you may need to click the `^` arrow and drag it onto the taskbar to keep it visible).
+- **One-key toggle** with a global hotkey that works in any app or game
+- **Change the hotkey** any time from the tray menu
+- **Tray icon shows the state at a glance**: green **G** = on, grey slashed **G** = off
+- **Remembers your preferred mode**: fullscreen only, or fullscreen and windowed
+- **Start with Windows**, with no UAC prompt each time
+- **Command-line options** for scripts, shortcuts and Stream Deck buttons
+- **Lightweight and safe**: uses NVIDIA's own driver API (NVAPI) to change the same setting as the "Enable G-SYNC" checkbox in NVIDIA Control Panel. Nothing is injected into games.
 
+## Requirements
 
-Side note: May have to toggle G-sync on from Nvidia Control Panel once before the program works. Unsure on that though. If anyone has issues report it to my GitHub.
+- Windows 10 or 11
+- An NVIDIA GPU with a G-SYNC or G-SYNC Compatible display
+- A current NVIDIA driver
 
-Prefer not to build an .exe? From this folder:
+## Download
+
+1. Go to the [**Releases**](../../releases) page.
+2. Download ` SyncSwitch.exe` from the latest release.
+3. Put it somewhere permanent, such as `C:\Tools\SyncSwitch\`, and run it.
+
+The icon appears in your system tray. If you don't see it, click the **^** arrow near the clock and drag the icon onto the taskbar so it stays visible.
+
+> **Windows SmartScreen warning?** Because the app isn't code-signed, Windows may show "Windows protected your PC" the first time. Click **More info → Run anyway**.
+
+## How to use
+
+| Action | How |
+|---|---|
+| Toggle G-SYNC | Press **Ctrl+Alt+G**, or left-click the tray icon |
+| Open the menu | Right-click the tray icon |
+
+### Tray menu
+
+| Menu item | What it does |
+|---|---|
+| **Turn G-SYNC on / off** | Same as the hotkey |
+| **When on, use** | Choose *Fullscreen only* or *Fullscreen and windowed* |
+| **Change hotkey...** | Press a new key combination, then click **Save** |
+| **Show notifications** | Turn the confirmation pop-ups on or off |
+| **Start with Windows** | Launch automatically when you sign in |
+| **Restart as administrator** | Appears only if the driver needs admin rights (see below) |
+| **Refresh status** | Re-read the current state from the driver |
+| **Exit** | Close the app |
+
+### Changing the hotkey
+
+Choose **Change hotkey...**, press the combination you want, and click **Save**.
+
+- Combinations need **Ctrl**, **Alt**, **Shift** or **Win**. Function keys (F1–F24) can be used on their own.
+- If another app already uses the combination (Discord, OBS, Xbox Game Bar, the NVIDIA app…), you'll be asked to pick another.
+- Most **Win+** combinations are reserved by Windows.
+- **Esc** cancels. **Reset to default** returns to Ctrl+Alt+G.
+
+## Good to know
+
+**Administrator rights.** On many systems the NVIDIA driver only allows programs running as administrator to change global settings. If a toggle reports that it needs admin rights, choose **Restart as administrator** from the tray menu. If you then turn on **Start with Windows**, the app will start with admin rights automatically at every sign-in, without a UAC prompt.
+
+**When the change takes effect.** The driver reads this setting when a game launches. **Games that are already running may keep their previous G-SYNC state until you restart them.**
+
+**Checking that it works.** In NVIDIA Control Panel, open the **Display** menu at the top and enable **G-SYNC Indicator** (or **G-SYNC Compatible Indicator**). An on-screen label then shows whenever G-SYNC is active.
+
+## Command line
+
+```
+ SyncSwitch.exe --toggle               Toggle G-SYNC and exit
+ SyncSwitch.exe --on                   Turn on (uses your saved mode)
+ SyncSwitch.exe --on --mode windowed   Turn on for fullscreen and windowed
+ SyncSwitch.exe --on --mode fullscreen Turn on for fullscreen only
+ SyncSwitch.exe --off                  Turn off
+ SyncSwitch.exe --status               Show the current state
+```
+
+Run these from an administrator prompt if your system requires admin rights.
+
+## Settings
+
+Settings are stored in `%APPDATA%\ SyncSwitch\config.json`. Delete that file to reset everything to defaults.
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| "Hotkey is already in use" | Another app owns that combination. Pick a different one with **Change hotkey...** |
+| Tray icon shows a red **!** | The app couldn't talk to the NVIDIA driver. Hover over the icon or open the menu for details. |
+| "nvapi64.dll not found" | No NVIDIA driver is installed, or the NVIDIA GPU isn't driving your display. |
+| Toggle says it needs admin rights | Use **Restart as administrator** from the tray menu. |
+| G-SYNC didn't change in a game | Restart the game; the driver applies the setting at launch. |
+
+## Uninstalling
+
+1. Untick **Start with Windows** in the tray menu.
+2. Choose **Exit**.
+3. Delete ` SyncSwitch.exe` and the folder `%APPDATA%\ SyncSwitch`.
+
+## Building from source
+
+Requires [Python 3.9+](https://www.python.org/downloads/) with **"Add python.exe to PATH"** ticked during install.
+
+```
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+build.bat
+```
+
+The finished program is created at `dist\ SyncSwitch.exe`.
+
+To run it without building an .exe:
+
 ```
 pip install -r requirements.txt
 pythonw gsync_toggle.py
 ```
 
-## Using it
+### Technical details
 
-Right-click the tray icon for:
-
-| Menu item | What it does |
-|---|---|
-| Turn G-SYNC on / off | Same as the hotkey. |
-| When on, use | Fullscreen only, or Fullscreen and windowed. |
-| Change hotkey... | Press any combo (needs Ctrl, Alt, Shift or Win, except F-keys, which can be used alone), then  Save . Esc cancels; "Reset to default" goes back to Ctrl+Alt+G. |
-| Show notifications | The small pop-up after each toggle. |
-| Start with Windows | Starts the app when you sign in (as administrator, without a UAC prompt). |
-| Restart as administrator | Only shown when needed - see below. |
-
-Settings are saved in `%APPDATA%\GSyncToggle\config.json`.
-
-### Administrator rights
-On many systems the NVIDIA driver only lets programs running as administrator change global settings. If a toggle says it needs administrator rights, choose  Restart as administrator  from the menu. Turning on  Start with Windows  while running as admin makes it start elevated automatically from then on.
-
-### When does the change take effect?
-The driver reads this setting when a game starts.  Games already running may keep their old G-SYNC state until you restart them.  To confirm it's working, turn on NVIDIA Control Panel → Display → *G-SYNC Compatible Indicator* (or *G-SYNC Indicator*) — it shows on screen whenever G-SYNC is active.
-
-## Command line
-Useful for Stream Deck buttons, shortcuts, or scripts (run from an admin prompt if required):
-```
-GSyncToggle.exe --toggle
-GSyncToggle.exe --on            (uses your saved "on" mode)
-GSyncToggle.exe --on --mode windowed
-GSyncToggle.exe --off
-GSyncToggle.exe --status
-```
-
-## Troubleshooting
--  "Hotkey is already in use"  – another app (Discord, GeForce Experience/NVIDIA App, OBS, Game Bar…) owns that combo. Pick a different one.
--  Win+ combos won't save  – Windows reserves most of them. Use Ctrl/Alt/Shift instead.
--  "nvapi64.dll not found"  – no NVIDIA driver is installed or the GPU isn't the active display adapter.
--  Icon shows a red "!"  – the app couldn't talk to the driver; hover the icon or check the menu for the message.
--  To remove it  – untick *Start with Windows*, choose *Exit*, and delete the folder plus `%APPDATA%\GSyncToggle`.
-
-## Technical notes
-Settings changed (IDs from NVIDIA's `NvApiDriverSettings.h`), in the driver's base profile and in the active global preset if it overrides them:
+The app changes these driver settings (IDs from NVIDIA's `NvApiDriverSettings.h`) in the global driver profile:
 
 | Setting | ID | Values |
 |---|---|---|
-| `VRR_MODE` – "Enable G-SYNC globally" | `0x1194F158` | 0 off, 1 fullscreen only, 2 fullscreen + windowed |
-| `VRRREQUESTSTATE` – "VRR requested state" | `0x1094F1F7` | same |
+| `VRR_MODE` – "Enable G-SYNC globally" | `0x1194F158` | 0 = off, 1 = fullscreen only, 2 = fullscreen and windowed |
+| `VRRREQUESTSTATE` – "VRR requested state" | `0x1094F1F7` | same as above |
 
-You can inspect both with NVIDIA Profile Inspector under the global profile if you want to double-check.
+## Disclaimer
+
+This is an independent project and is not affiliated with or endorsed by NVIDIA. G-SYNC and NVIDIA are trademarks of NVIDIA Corporation.
