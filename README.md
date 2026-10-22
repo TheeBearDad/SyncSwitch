@@ -163,3 +163,5 @@ The app changes these driver settings (IDs from NVIDIA's `NvApiDriverSettings.h`
 ## Disclaimer
 
 This is an independent project and is not affiliated with or endorsed by NVIDIA. G-SYNC and NVIDIA are trademarks of NVIDIA Corporation.
+
+This program was created using Claude, I want to remain 100% transparent. Feel free to use this or not, I just wanted to share this is case someone else out there may benefit from it like I have.
